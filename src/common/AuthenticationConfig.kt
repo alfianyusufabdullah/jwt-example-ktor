@@ -20,6 +20,7 @@ object AuthenticationConfig {
             .withIssuer(issuer)
             .withClaim("username", user?.username)
             .withClaim("password", user?.password)
+            .withClaim("time", System.currentTimeMillis())
             .sign(Algorithm.HMAC256(secret))
     }
 
