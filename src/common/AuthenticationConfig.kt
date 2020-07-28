@@ -16,15 +16,23 @@ object AuthenticationConfig {
         .withIssuer(issuer)
         .build()
 
-    fun generateNewTokenForUser(user: User?): String {
-        return JWT.create()
+    fun generateNewTokenForUser(user: User?): Map<String, Any> {
+        val expiredDate = getExpiration().time
+
+        val newToken =  JWT.create()
             .withSubject("Authentication")
             .withIssuer(issuer)
             .withClaim("username", user?.username)
             .withClaim("password", user?.password)
-            .withClaim("time", System.currentTimeMillis())
+            .withClaim("expired", expiredDate)
             .withExpiresAt(getExpiration())
             .sign(Algorithm.HMAC256(secret))
+
+        return mapOf(
+            "token" to newToken,
+            "created_at" to Date(System.currentTimeMillis()),
+            "expired_at" to Date(expiredDate)
+        )
     }
 
     private fun getExpiration() = Date(System.currentTimeMillis() + validityInMs)
