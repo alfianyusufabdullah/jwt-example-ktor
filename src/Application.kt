@@ -53,9 +53,7 @@ fun Application.module() {
     }
 
     routing {
-
         authenticate {
-
             get("/test/request") {
                 call.authPrinciple?.let {
                     call.respond(
@@ -66,7 +64,7 @@ fun Application.module() {
                     )
                 } ?: kotlin.run {
                     call.respond(
-                        HttpStatusCode.OK,
+                        HttpStatusCode.Unauthorized,
                         mapOf(
                             "message" to "error getting information, be sure token included"
                         )
